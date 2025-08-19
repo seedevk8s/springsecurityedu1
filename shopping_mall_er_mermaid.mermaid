@@ -1,0 +1,237 @@
+erDiagram
+    %% 회원 관련 테이블
+    MEMBERS {
+        NUMBER(10) MEMBER_ID PK "회원ID"
+        VARCHAR2(100) EMAIL "이메일"
+        VARCHAR2(200) PASSWORD "비밀번호"
+        VARCHAR2(50) MEMBER_NAME "회원명"
+        VARCHAR2(20) PHONE "휴대폰"
+        DATE BIRTH_DATE "생년월일"
+        CHAR(1) GENDER "성별"
+        VARCHAR2(20) MEMBER_GRADE "회원등급"
+        NUMBER(10) POINTS "적립금"
+        NUMBER(12) TOTAL_PURCHASE "누적구매액"
+        VARCHAR2(20) LOGIN_TYPE "로그인타입"
+        VARCHAR2(100) SOCIAL_ID "소셜ID"
+        CHAR(1) IS_SMS_AGREE "SMS동의"
+        CHAR(1) IS_EMAIL_AGREE "이메일동의"
+        DATE JOIN_DATE "가입일"
+        DATE LAST_LOGIN_DATE "최종로그인"
+        DATE WITHDRAW_DATE "탈퇴일"
+        CHAR(1) IS_ACTIVE "활성여부"
+    }
+    
+    DELIVERY_ADDRESSES {
+        NUMBER(10) ADDRESS_ID PK "배송지ID"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        VARCHAR2(50) ADDRESS_NAME "배송지명"
+        VARCHAR2(50) RECEIVER_NAME "수령인"
+        VARCHAR2(20) RECEIVER_PHONE "수령인전화"
+        VARCHAR2(10) ZIPCODE "우편번호"
+        VARCHAR2(200) ADDRESS1 "기본주소"
+        VARCHAR2(200) ADDRESS2 "상세주소"
+        CHAR(1) IS_DEFAULT "기본배송지"
+        VARCHAR2(200) DELIVERY_MSG "배송메시지"
+        DATE CREATED_DATE "등록일"
+    }
+    
+    %% 상품 관련 테이블
+    PRODUCT_CATEGORY {
+        NUMBER(10) CATEGORY_ID PK "카테고리ID"
+        VARCHAR2(100) CATEGORY_NAME "카테고리명"
+        NUMBER(10) PARENT_ID "상위카테고리"
+        NUMBER(1) CATEGORY_LEVEL "카테고리레벨"
+        NUMBER(5) DISPLAY_ORDER "표시순서"
+        CHAR(1) IS_ACTIVE "활성여부"
+        DATE CREATED_DATE "생성일"
+        DATE MODIFIED_DATE "수정일"
+    }
+    
+    PRODUCTS {
+        NUMBER(10) PRODUCT_ID PK "상품ID"
+        VARCHAR2(50) PRODUCT_CODE "상품코드"
+        VARCHAR2(200) PRODUCT_NAME "상품명"
+        NUMBER(10) CATEGORY_ID FK "카테고리ID"
+        VARCHAR2(100) BRAND "브랜드"
+        CLOB DESCRIPTION "상품설명"
+        NUMBER(10_2) REGULAR_PRICE "정가"
+        NUMBER(10_2) SALE_PRICE "판매가"
+        NUMBER(10_2) COST_PRICE "원가"
+        NUMBER(10) STOCK_QTY "재고수량"
+        NUMBER(10) MIN_STOCK_QTY "최소재고"
+        NUMBER(7_2) WEIGHT "무게"
+        VARCHAR2(20) STATUS "상태"
+        DATE CREATED_DATE "등록일"
+        VARCHAR2(50) CREATED_BY "등록자"
+        DATE MODIFIED_DATE "수정일"
+        VARCHAR2(50) MODIFIED_BY "수정자"
+        CHAR(1) HAS_OPTIONS "옵션여부"
+        VARCHAR2(100) OPTION_NAME "옵션명"
+    }
+    
+    PRODUCT_IMAGES {
+        NUMBER(10) IMAGE_ID PK "이미지ID"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        VARCHAR2(20) IMAGE_TYPE "이미지타입"
+        VARCHAR2(500) IMAGE_URL "이미지URL"
+        NUMBER(3) IMAGE_ORDER "표시순서"
+        VARCHAR2(200) ALT_TEXT "대체텍스트"
+        DATE UPLOAD_DATE "업로드일"
+    }
+    
+    %% 장바구니 및 찜하기
+    SHOPPING_CART {
+        NUMBER(10) CART_ID PK "장바구니ID"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        VARCHAR2(100) SESSION_ID "세션ID"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        VARCHAR2(200) PRODUCT_OPTION "상품옵션"
+        NUMBER(5) QUANTITY "수량"
+        DATE ADDED_DATE "담은날짜"
+        CHAR(1) IS_SELECTED "선택여부"
+    }
+    
+    WISHLIST {
+        NUMBER(10) WISHLIST_ID PK "찜ID"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        DATE ADDED_DATE "찜한날짜"
+        CHAR(1) NOTIFY_RESTOCK "재입고알림"
+        CHAR(1) NOTIFY_SALE "할인알림"
+    }
+    
+    %% 주문 관련 테이블
+    ORDERS {
+        VARCHAR2(20) ORDER_ID PK "주문번호"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        DATE ORDER_DATE "주문일"
+        VARCHAR2(20) ORDER_STATUS "주문상태"
+        NUMBER(12) TOTAL_AMOUNT "총주문금액"
+        NUMBER(10) DISCOUNT_AMOUNT "할인금액"
+        NUMBER(10) DELIVERY_FEE "배송비"
+        NUMBER(12) PAYMENT_AMOUNT "결제금액"
+        VARCHAR2(30) PAYMENT_METHOD "결제방법"
+        DATE PAYMENT_DATE "결제일시"
+        VARCHAR2(50) RECEIVER_NAME "수령인"
+        VARCHAR2(20) RECEIVER_PHONE "수령인전화"
+        VARCHAR2(10) ZIPCODE "우편번호"
+        VARCHAR2(200) DELIVERY_ADDR1 "배송주소"
+        VARCHAR2(200) DELIVERY_ADDR2 "상세주소"
+        VARCHAR2(200) DELIVERY_MSG "배송메시지"
+        VARCHAR2(50) INVOICE_NO "송장번호"
+        DATE SHIPPED_DATE "발송일"
+        DATE DELIVERED_DATE "배송완료일"
+    }
+    
+    ORDER_ITEMS {
+        NUMBER(10) ORDER_ITEM_ID PK "주문상세ID"
+        VARCHAR2(20) ORDER_ID FK "주문번호"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        VARCHAR2(200) PRODUCT_NAME "상품명"
+        NUMBER(10_2) PRODUCT_PRICE "상품가격"
+        NUMBER(5) QUANTITY "수량"
+        NUMBER(12_2) SUBTOTAL "소계"
+        VARCHAR2(20) ITEM_STATUS "개별상태"
+        CHAR(1) REVIEW_YN "리뷰작성여부"
+        NUMBER(10) DISCOUNT_AMOUNT "상품할인"
+        NUMBER(10) COUPON_DISCOUNT "쿠폰할인"
+    }
+    
+    %% 리뷰 테이블
+    PRODUCT_REVIEWS {
+        NUMBER(10) REVIEW_ID PK "리뷰ID"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        VARCHAR2(20) ORDER_ID FK "주문번호"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        NUMBER(1) RATING "평점"
+        VARCHAR2(200) REVIEW_TITLE "리뷰제목"
+        VARCHAR2(4000) REVIEW_CONTENT "리뷰내용"
+        VARCHAR2(500) IMAGE_URL1 "이미지1"
+        VARCHAR2(500) IMAGE_URL2 "이미지2"
+        VARCHAR2(500) IMAGE_URL3 "이미지3"
+        NUMBER(10) LIKE_COUNT "좋아요수"
+        DATE CREATED_DATE "작성일"
+        CHAR(1) IS_BEST "베스트리뷰"
+        CHAR(1) IS_VISIBLE "노출여부"
+    }
+    
+    %% 쿠폰 관련 테이블
+    COUPONS {
+        NUMBER(10) COUPON_ID PK "쿠폰ID"
+        VARCHAR2(50) COUPON_CODE "쿠폰코드"
+        VARCHAR2(200) COUPON_NAME "쿠폰명"
+        VARCHAR2(20) DISCOUNT_TYPE "할인유형"
+        NUMBER(10) DISCOUNT_VALUE "할인값"
+        NUMBER(12) MIN_ORDER_AMT "최소주문금액"
+        NUMBER(10) MAX_DISCOUNT "최대할인금액"
+        DATE VALID_FROM "유효시작일"
+        DATE VALID_TO "유효종료일"
+        NUMBER(10) ISSUE_LIMIT "발급한도"
+        NUMBER(10) ISSUED_COUNT "발급수"
+        CHAR(1) IS_ACTIVE "활성여부"
+    }
+    
+    MEMBER_COUPONS {
+        NUMBER(10) ISSUE_ID PK "발급ID"
+        NUMBER(10) MEMBER_ID FK "회원ID"
+        NUMBER(10) COUPON_ID FK "쿠폰ID"
+        DATE ISSUED_DATE "발급일"
+        DATE USED_DATE "사용일"
+        VARCHAR2(20) ORDER_ID FK "사용주문번호"
+        CHAR(1) IS_USED "사용여부"
+        DATE EXPIRE_DATE "만료일"
+    }
+    
+    %% 이벤트 관련 테이블
+    EVENTS {
+        NUMBER(10) EVENT_ID PK "이벤트ID"
+        VARCHAR2(30) EVENT_TYPE "이벤트유형"
+        VARCHAR2(200) EVENT_NAME "이벤트명"
+        VARCHAR2(1000) EVENT_DESC "이벤트설명"
+        VARCHAR2(500) BANNER_URL "배너URL"
+        DATE START_DATE "시작일"
+        DATE END_DATE "종료일"
+        NUMBER(3) DISCOUNT_RATE "할인율"
+        VARCHAR2(100) TARGET_GRADE "대상등급"
+        CHAR(1) IS_ACTIVE "활성여부"
+        NUMBER(10) VIEW_COUNT "조회수"
+        DATE CREATED_DATE "생성일"
+    }
+    
+    EVENT_PRODUCTS {
+        NUMBER(10) EVENT_ID FK "이벤트ID"
+        NUMBER(10) PRODUCT_ID FK "상품ID"
+        NUMBER(10_2) SPECIAL_PRICE "특가"
+        NUMBER(10) STOCK_LIMIT "한정수량"
+        NUMBER(10) SOLD_COUNT "판매수량"
+        DATE ADDED_DATE "등록일"
+    }
+    
+    %% 관계 정의 (Relationships)
+    %% 회원 관련
+    MEMBERS ||--o{ DELIVERY_ADDRESSES : "has"
+    MEMBERS ||--o{ ORDERS : "places"
+    MEMBERS ||--o{ SHOPPING_CART : "adds to"
+    MEMBERS ||--o{ WISHLIST : "wishes"
+    MEMBERS ||--o{ PRODUCT_REVIEWS : "writes"
+    MEMBERS ||--o{ MEMBER_COUPONS : "receives"
+    
+    %% 상품 관련
+    PRODUCT_CATEGORY ||--o{ PRODUCTS : "contains"
+    PRODUCTS ||--o{ PRODUCT_IMAGES : "has"
+    PRODUCTS ||--o{ SHOPPING_CART : "added to"
+    PRODUCTS ||--o{ WISHLIST : "wished by"
+    PRODUCTS ||--o{ ORDER_ITEMS : "ordered as"
+    PRODUCTS ||--o{ PRODUCT_REVIEWS : "reviewed"
+    PRODUCTS ||--o{ EVENT_PRODUCTS : "participates in"
+    
+    %% 주문 관련
+    ORDERS ||--o{ ORDER_ITEMS : "contains"
+    ORDERS ||--o{ PRODUCT_REVIEWS : "generates"
+    ORDERS ||--o{ MEMBER_COUPONS : "uses"
+    
+    %% 쿠폰 관련
+    COUPONS ||--o{ MEMBER_COUPONS : "issued as"
+    
+    %% 이벤트 관련
+    EVENTS ||--o{ EVENT_PRODUCTS : "includes"
